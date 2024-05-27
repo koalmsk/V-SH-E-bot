@@ -8,6 +8,7 @@ from aiogram.fsm import storage
 
 from aiogram.fsm.context import FSMContext
 import config
+from aiogram.fsm import  state
 from aiogram.fsm.storage.memory import MemoryStorage
 
 bot = Bot(token=config.TOKEN)
@@ -16,9 +17,13 @@ dp = Dispatcher(storage=memory)
 
 @dp.message(fils.CommandStart())
 async def start_cmd(message: types.Message, state: FSMContext):
-    await message.answer("hello", reply_markup=keyboards.start_keyboard)
+    await message.answer("hello", reply_markup=keyboards.create_keyboard("Добавить пари", "Мои пари"))
     await state.set_state(User_states.BASE)
 
+
+@dp.message(F.text == "Мои пари", fils.StateFilter(User_states.BASE))
+async def create_pari(message: types.Message, state: FSMContext):
+     pass
 
 async def run_bot(bot):
     await dp.start_polling(bot)
